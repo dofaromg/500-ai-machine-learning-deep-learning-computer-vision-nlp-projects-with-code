@@ -124,11 +124,12 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - **兩者職責完全不同（不衝突，可互補）**
 - **安全性 ⚠️ 高優先**：
   ```js
-  const DL580_KEY = "MrLiouWord2026";  // ← 硬編碼在 source
+  const DL580_KEY = "[REDACTED — literal string constant, ~14 chars]";  // ← 硬編碼在 source
   ```
   - 這個 key 用在 `fetch(bridge, { headers: { "x-api-key": DL580_KEY } })`
   - **任何拿到 Worker source 的人（例如 Cloudflare dashboard collaborator）都能取得**
   - **這正是 CareOS 報告中 `shengai-isp` API Key 硬編碼問題的翻版**
+  - 為避免二次洩漏，本報告**不揭露** key 字面值；請直接透過 `wrangler tail` 或 dashboard 查閱後 rotation
 - **結論**：⚠️ **安全必修 + 保留**
   - **保留**現有部署（職責與本地版不同）
   - **必修**：
@@ -210,4 +211,4 @@ wrangler secret put ANTHROPIC_API_KEY --name shengai-isp
 
 - 本次補查為**唯讀稽核**：沒有修改任何 Cloudflare Worker、沒有部署、沒有洩漏取回的原始碼到公開位置。
 - 取回的 Worker source 只用於本地比對，沒有寫入 repo（僅摘要放在此報告）。
-- `DL580_KEY = "MrLiouWord2026"` 屬於必須揭露的安全發現，本報告揭露此字面值以便您 `wrangler secret put` 覆蓋——**建議在讀到此報告後 24 小時內完成 rotation**。
+- `particle-system-hub` 硬編碼的 `DL580_KEY` 屬於必須揭露的安全**發現**，但本報告**不揭露該 key 的字面值**（避免二次洩漏到 git 歷史 / mirrors / caches）。請透過 `wrangler tail` 或 Cloudflare dashboard 直接查閱 Worker source 取得該值後，執行 `wrangler secret put DL580_KEY --name particle-system-hub`——**建議在讀到此報告後 24 小時內完成 rotation**。
