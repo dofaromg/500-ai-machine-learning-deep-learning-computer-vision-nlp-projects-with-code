@@ -95,4 +95,4 @@ adapter/reference，不作母體主名（依 `mother_platform/MRL_DELIVERY_MANIF
 - **2026-07-10** — [Stage 3 系統級 Workers 補查稽核報告](docs/STAGE3_WORKER_AUDIT_20260710.md)
   - 追查 CareOS 復盤報告 (2026-03-11) 中 5 個「待確認」系統級 Workers
   - 發現：`particle-sig-verify` 為 stub；`particle-system-hub` 有 `DL580_KEY` 硬編碼；`particle-auth-gateway` 用 XOR 弱加密
-  - 建議動作：3 個 P0 安全問題需在一週內處理
+  - 建議動作：3 個 P0 安全問題需在 24 小時內完成 rotation（與報告七章對齊）
