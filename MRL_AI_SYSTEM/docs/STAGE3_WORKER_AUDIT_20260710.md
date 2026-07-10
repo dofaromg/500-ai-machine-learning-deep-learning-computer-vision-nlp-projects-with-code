@@ -40,8 +40,11 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - 本地版：純轉發閘 + 每個 subject 限流 + KV trace mirror（轉發到 `hub.mrliouword.com`）
   - 部署版：AI 模型代理（直接呼叫 Anthropic API）
   - **兩者職責完全不同**：部署版是「AI Provider Proxy」，我們新蓋的是「Auth-forward Edge」
-- **安全性**：
-  - ⚠️ `AUTH_BYPASS === "true"` 環境變數存在時可完全繞過認證。**建議**：production 環境應強制不設此 env，或改為 `NODE_ENV === "test"` 才允許。
+- **安全性 ⚠️ P0**：
+  - 🚨 **`AUTH_BYPASS === "true"` 是完整認證繞過**——只要 env 存在，全站認證失效
+  - **依賴 `NODE_ENV === "test"` 之類白名單條件不夠**（誤配置就會漏）
+  - **正確做法：fail-closed**——在 Worker `fetch()` 啟動時檢查，若 `env.AUTH_BYPASS` 存在且 `env.ALLOW_AUTH_BYPASS !== "yes_i_understand_this_is_dev"`（或類似顯式開發旗標），**直接 throw 拒絕啟動**
+  - Production 部署絕不設任何允許繞過的變數，此問題應與 `DL580_KEY` 一同列為 P0
   - ✅ API key 走 env secret，沒有硬編碼
 - **結論**：🔁 **遷移到新拓撲**
   - 部署版繼續存在，作為 GitLab client 的 AI 代理入口
@@ -85,27 +88,46 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - 部署版：多平台 token vault + MCP-style API proxy + 認知循環
   - **兩者職責完全不同**
 - **安全性 ⚠️ 高優先**：
-  - **XOR 加密**：`加密(令牌, 主鑰匙)` 用 XOR + base64。**這是可逆的、非加密**——攻擊者若能拿到 KV 內容且推測 master key 長度，可完全還原所有平台 token。
-  - **SHA-256 hash of master key** 存在 KV：容易被離線暴力
+  - **XOR + base64 非真加密**：`加密(令牌, 主鑰匙)` 用 XOR + base64。相較於 AES-GCM 沒有語義安全，且在下列**任一條件成立時可完全解出 token**：
+    - 同一 master key 對多筆較長 token 產生 keystream 重用（stream cipher 常見弱點）
+    - 攻擊者已知任一個 token 的明文（例如 `ghp_` GitHub token 前綴，可推 keystream 一段）
+    - master key 熵值不足（例如短字串、常見詞彙），使離線窮舉可行
+  - **SHA-256(master key) 存於 KV**：若 master key 為高熵隨機字串則 offline brute-force 不可行；但**若 master key 是使用者可讀密碼**（本 Worker 只要求 ≥16 字元、不強制隨機性），字典/彩虹表攻擊仍有效
   - **無 rate limiting**：`/mcp/proxy` 可被反覆呼叫用來刷平台 quota
 - **結論**：⚠️ **安全必修 + 保留**
   - **保留**現有部署，因為職責與新版不同（不能刪）
-  - **必修**：把 `加密()` / `解密()` 改為 `AES-GCM`（Cloudflare WebCrypto 原生支援）。修改示意：
+  - **必修**：把 `加密()` / `解密()` 改為 **PBKDF2 → AES-GCM** 的組合。**注意 `SHA-256(masterKey)` 不是 KDF**——它沒有 work factor，低熵 master key 仍可離線窮舉。示意（含 salt / version / IV / tag）：
     ```js
-    async function encrypt(plaintext, masterKey) {
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      const key = await crypto.subtle.importKey(
-        "raw",
-        await crypto.subtle.digest("SHA-256", new TextEncoder().encode(masterKey)),
-        { name: "AES-GCM" }, false, ["encrypt"]
+    // 每個 vault 有一次性隨機 salt，第一次 init 時產生並持久化到 KV
+    async function deriveKey(masterKey, salt) {
+      const material = await crypto.subtle.importKey(
+        "raw", new TextEncoder().encode(masterKey),
+        "PBKDF2", false, ["deriveKey"]
       );
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt, iterations: 600_000, hash: "SHA-256" },
+        material, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+      );
+    }
+    async function encrypt(plaintext, masterKey, salt) {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(masterKey, salt);
       const ct = await crypto.subtle.encrypt(
         { name: "AES-GCM", iv }, key, new TextEncoder().encode(plaintext)
       );
-      return btoa(String.fromCharCode(...iv, ...new Uint8Array(ct)));
+      // Envelope: version(1) | iv(12) | ciphertext+tag(rest)
+      const envelope = new Uint8Array(1 + 12 + ct.byteLength);
+      envelope[0] = 0x01;  // format version
+      envelope.set(iv, 1);
+      envelope.set(new Uint8Array(ct), 13);
+      return btoa(String.fromCharCode(...envelope));
     }
     ```
-  - **必修**：對 `/mcp/proxy` 加 60 req/min per subject 限流（可沿用 `MRL_AI_SYSTEM/edge_workers/ai_gateway` 的 KV rate-limit pattern）
+    - **Migration 建議**：新格式加 version byte，解密時看到 `0x01` 走 PBKDF2 + AES-GCM，否則走舊 XOR（供 rotation 期間相容）；rotation 完成後刪除 legacy path
+    - **Master key policy**：如果 UI 只允許人類密碼，需要在 `/init` 加入密碼強度檢查（zxcvbn score ≥ 3）
+  - **必修**：對 `/mcp/proxy` 加 60 req/min per subject 限流。
+    - **嚴格配額**（必要時）：用 [Durable Objects](https://developers.cloudflare.com/durable-objects/) 或 [Cloudflare Rate Limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)，兩者提供強一致計數
+    - **best-effort**（成本較低）：`MRL_AI_SYSTEM/edge_workers/ai_gateway` 的 KV pattern——但 KV **具最終一致性**，並發請求可短暫突破額度；此方案僅適合防呆，不適合當作平台 quota 的安全閘門
 
 ### 4. `particle-system-hub` — 系統圖譜 v2.2.0
 
@@ -129,14 +151,17 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - 這個 key 用在 `fetch(bridge, { headers: { "x-api-key": DL580_KEY } })`
   - **任何拿到 Worker source 的人（例如 Cloudflare dashboard collaborator）都能取得**
   - **這正是 CareOS 報告中 `shengai-isp` API Key 硬編碼問題的翻版**
-  - 為避免二次洩漏，本報告**不揭露** key 字面值；請直接透過 `wrangler tail` 或 dashboard 查閱後 rotation
+  - 為避免二次洩漏，本報告**不揭露** key 字面值——**且 rotation 不需要先取得舊值**（見下方步驟）
 - **結論**：⚠️ **安全必修 + 保留**
   - **保留**現有部署（職責與本地版不同）
-  - **必修**：
-    ```bash
-    wrangler secret put DL580_KEY --name particle-system-hub
-    # 然後把 source 中的 `const DL580_KEY = ...` 改成 `const DL580_KEY = env.DL580_KEY;`
-    ```
+  - **Rotation 正確流程**（不需要取得舊值）：
+    1. **在 DL580 Bridge** 產生**新的**隨機 key（`openssl rand -hex 24`），設定 Bridge 同時接受新舊 key
+    2. `wrangler secret put DL580_KEY --name particle-system-hub`（輸入**新**值，不是舊值）
+    3. 修改 Worker source：`const DL580_KEY = env.DL580_KEY;`——舊字面值全部刪除
+    4. `wrangler deploy` 部署新版本
+    5. 打 `/dl580` endpoint 驗證新 key 走得通
+    6. **回 DL580 Bridge 撤銷舊 key**——完成 rotation
+  - ⚠️ **禁止**用 `wrangler tail`/dashboard 讀出舊值再重用——那是在製造另一份洩漏
 
 ### 5. `particle-doctor` — 自動診斷修復系統
 
@@ -151,18 +176,23 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - 本地版：monitor local systemd services + optional `systemctl restart`
   - 部署版：monitor CF Workers + optional edge patch
   - **兩者職責完全不同（可互補：本地監控 daemon、遠端監控 Worker）**
-- **安全性 ⚠️ 中優先**：
+- **安全性 ⚠️ 依 `CF_KEY` scope 決定優先級**：
   ```js
   const CF_ACCOUNT = "0b36a4577da7fced6df2e062fa5f6fa2";  // ← 硬編碼在 source
   ```
-  - Cloudflare account ID **不是機密**（只要有 API key 就沒用），但寫死是**衛生問題**：換帳號、複用程式碼時會出錯
+  - Cloudflare account ID 本身**不是機密**（單獨無用）
+  - 但 `/fix` / `/fix-all` 會 **PUT scripts 到 Cloudflare API**——若 `CF_KEY` 的 API Token scope 允許存取 **多個帳號**（例如 Global API Key 或跨帳號 Token），寫死 account ID 就會**變成寫入邊界問題**：一個 handler bug、CSRF、或惡意 `id` 參數都可能誤寫到其他帳號
   - `CF_EMAIL` 和 `CF_KEY` 有正確走 env secret ✅
-- **結論**：⚠️ **衛生問題 + 保留**
-  - **保留**現有部署
-  - **建議修改**：
-    ```js
-    const CF_ACCOUNT = env.CF_ACCOUNT_ID;  // 改讀 env
-    ```
+- **結論**：⚠️ **視 `CF_KEY` scope 而定**
+  - **如果 `CF_KEY` 是嚴格 scoped API Token（單帳號、僅 Workers:Edit）**：僅為衛生問題，**P2**
+  - **如果 `CF_KEY` 是 Global API Key 或跨帳號 Token**：**升為 P0/P1**——這是實質的寫入邊界問題
+  - **建議動作**：
+    1. **必修**：確認 `CF_KEY` 的 scope；若能改為 scoped API Token 應優先改（獨立於 account ID 硬編碼問題）
+    2. **應修**：把 `CF_ACCOUNT` 改讀 `env.CF_ACCOUNT_ID`，並在 handler 內做「請求帳號 == 部署帳號」健康檢查：
+       ```js
+       const CF_ACCOUNT = env.CF_ACCOUNT_ID;
+       // Optional startup verification: fetch /accounts and assert only this ID is accessible
+       ```
 
 ## 四、發現的其它問題（Bonus）
 
@@ -183,18 +213,19 @@ wrangler secret put ANTHROPIC_API_KEY --name shengai-isp
 
 ## 五、後續建議動作（優先級排序）
 
-1. **P0（安全，這週）**
-   - 修 `particle-system-hub` 的 `DL580_KEY` 硬編碼 → 改讀 secret
-   - 修 `particle-auth-gateway` 的 XOR 加密 → 改用 AES-GCM
+1. **P0（安全，24 小時內）**
+   - 修 `particle-system-hub` 的 `DL580_KEY` 硬編碼 → rotation 流程見「三、4」結論段
+   - 修 `particle-ai-gateway` 的 `AUTH_BYPASS` → 改為 fail-closed 啟動檢查（見「三、1」結論段）
+   - 修 `particle-auth-gateway` 的 XOR 加密 → 改用 PBKDF2 + AES-GCM（見「三、3」結論段）
    - 修 `shengai-isp` 的 `ANTHROPIC_API_KEY` 硬編碼（CareOS 報告已列）
+   - 確認 `particle-doctor` 的 `CF_KEY` scope；若為 Global API Key 或跨帳號 Token，也是 P0（見「三、5」）
 
 2. **P1（功能，這個月）**
    - 把 `MRL_AI_SYSTEM/particles/sig_verify` 移植成 CF Worker 覆蓋 `particle-sig-verify` 空殼
    - 或改採「本地 daemon + CF Worker 純作 alias」的雙軌方案
 
 3. **P2（衛生，下個 sprint）**
-   - 修 `particle-doctor` 的 `CF_ACCOUNT` 硬編碼
-   - 對 `particle-ai-gateway` 加 production 環境 `AUTH_BYPASS` 保護
+   - `particle-doctor` 的 `CF_ACCOUNT` 改讀 `env.CF_ACCOUNT_ID`（假設 `CF_KEY` 已 scope 好；否則升為 P0）
 
 4. **P3（架構收攏）**
    - 在 `MRL_AI_SYSTEM/docs/ARCHITECTURE.md` 加一小節：說明「CF Worker 端 `particle-*`」與「本地 daemon `MRL_AI_SYSTEM/particles/*`」的分工，讓後續讀者不會搞混
@@ -211,4 +242,4 @@ wrangler secret put ANTHROPIC_API_KEY --name shengai-isp
 
 - 本次補查為**唯讀稽核**：沒有修改任何 Cloudflare Worker、沒有部署、沒有洩漏取回的原始碼到公開位置。
 - 取回的 Worker source 只用於本地比對，沒有寫入 repo（僅摘要放在此報告）。
-- `particle-system-hub` 硬編碼的 `DL580_KEY` 屬於必須揭露的安全**發現**，但本報告**不揭露該 key 的字面值**（避免二次洩漏到 git 歷史 / mirrors / caches）。請透過 `wrangler tail` 或 Cloudflare dashboard 直接查閱 Worker source 取得該值後，執行 `wrangler secret put DL580_KEY --name particle-system-hub`——**建議在讀到此報告後 24 小時內完成 rotation**。
+- `particle-system-hub` 硬編碼的 `DL580_KEY` 屬於必須揭露的安全**發現**，但本報告**不揭露該 key 的字面值**（避免二次洩漏到 git 歷史 / mirrors / caches）。**Rotation 不需要取得舊值**——正確步驟見「三、4. `particle-system-hub`」結論段：在 DL580 Bridge 生新 key → `wrangler secret put`（輸入新值）→ 部署讀 `env.DL580_KEY` 的 source → 驗證 → 在 Bridge 撤銷舊 key。**建議 24 小時內完成整個流程**。
