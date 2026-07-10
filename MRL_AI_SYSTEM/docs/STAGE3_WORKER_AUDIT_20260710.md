@@ -124,7 +124,7 @@ CareOS 復盤報告 2026-03-11 抽查了 138 個 Cloudflare Workers，其中 **5
   - **兩者職責完全不同（不衝突，可互補）**
 - **安全性 ⚠️ 高優先**：
   ```js
-  const DL580_KEY = "MrLiouWord2026";  // ← 硬編碼在 source
+  const DL580_KEY = "<REDACTED>";  // ← 硬編碼在 source（已遮蔽）
   ```
   - 這個 key 用在 `fetch(bridge, { headers: { "x-api-key": DL580_KEY } })`
   - **任何拿到 Worker source 的人（例如 Cloudflare dashboard collaborator）都能取得**
@@ -210,4 +210,4 @@ wrangler secret put ANTHROPIC_API_KEY --name shengai-isp
 
 - 本次補查為**唯讀稽核**：沒有修改任何 Cloudflare Worker、沒有部署、沒有洩漏取回的原始碼到公開位置。
 - 取回的 Worker source 只用於本地比對，沒有寫入 repo（僅摘要放在此報告）。
-- `DL580_KEY = "MrLiouWord2026"` 屬於必須揭露的安全發現，本報告揭露此字面值以便您 `wrangler secret put` 覆蓋——**建議在讀到此報告後 24 小時內完成 rotation**。
+- `DL580_KEY` 曾被硬編碼於 source（字面值已遮蔽，請視為已洩漏並立即作廢），請儘速用 `wrangler secret put` 完成覆蓋與 rotation——**建議在讀到此報告後 24 小時內完成**。
