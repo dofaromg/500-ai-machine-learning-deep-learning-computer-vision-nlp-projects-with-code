@@ -48,7 +48,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
+        # Note: no `cache: pip` — that option requires requirements.txt or
+        # pyproject.toml. We only install one small package (pytest); the
+        # cache-miss cost is negligible compared to the maintenance burden
+        # of a lockfile carried purely to satisfy the cache.
 
       - name: Setup Node 20
         uses: actions/setup-node@v4
