@@ -1,4 +1,4 @@
-"""test_MRL_semantic_embedding.py (origin: MrLiouWord)
+"""test_MRL_semantic_embedding.py (origin: MrliouAI)
 
 吸收外部「局部嵌入語意檢索」能力 → 母體原生雜湊嵌入 + 餘弦檢索。
 驗:確定性嵌入、自相似=1、語意檢索命中、append-only 索引、origin_signature。
@@ -15,7 +15,7 @@ def test_embed_deterministic():
 
 def test_self_similarity_is_one():
     c = MRL_SemanticEmbeddingCore()
-    v = c.embed("origin signature MrLiouWord")
+    v = c.embed("origin signature MrliouAI")
     assert abs(c.cosine(v, v) - 1.0) < 1e-9
 
 
@@ -37,4 +37,4 @@ def test_index_is_append_only():
 
 
 def test_origin_signature():
-    assert MRL_SemanticEmbeddingCore().origin_signature == "MrLiouWord"
+    assert MRL_SemanticEmbeddingCore().origin_signature == "MrliouAI"

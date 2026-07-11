@@ -1,4 +1,4 @@
-"""test_MRL_perception_classifier.py (origin: MrLiouWord)
+"""test_MRL_perception_classifier.py (origin: MrliouAI)
 
 吸收外部「垃圾/毒性訊息偵測」ML 能力 → 母體原生統計感知分類器。
 驗:訓練後 spam>ham、flag 行為、純 stdlib 可重現、origin_signature。
@@ -41,4 +41,4 @@ def test_deterministic_refit():
 
 
 def test_origin_signature():
-    assert _fit().origin_signature == "MrLiouWord"
+    assert _fit().origin_signature == "MrliouAI"

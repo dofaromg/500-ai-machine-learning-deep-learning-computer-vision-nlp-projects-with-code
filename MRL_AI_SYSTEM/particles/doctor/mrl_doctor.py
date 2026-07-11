@@ -1,6 +1,6 @@
 """particle-doctor — health monitor + auto-restart supervisor.
 
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L5 Field (guardian)
 
 Polls sig_verify / system_hub / smartbody_v2 health endpoints, records incidents
@@ -35,7 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from trace_chain import emit as trace_emit  # noqa: E402
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 HOST = os.environ.get("MRL_DOCTOR_HOST", "127.0.0.1")
 PORT = int(os.environ.get("MRL_DOCTOR_PORT", "8788"))
 INTERVAL = int(os.environ.get("MRL_DOCTOR_INTERVAL", "15"))

@@ -4,7 +4,7 @@ import path from 'node:path';
 
 export const MRL_CONFIG = {
   system_name: 'MRL_Particle_Mother_RelayStation_v1',
-  origin_signature: 'MrLiouWord',
+  origin_signature: 'MrliouAI',
   namespace: 'MRL_',
   ledger_dir: path.resolve('data/ledger'),
   outbox_dir: path.resolve('data/outbox')

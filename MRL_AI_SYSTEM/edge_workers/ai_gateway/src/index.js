@@ -1,5 +1,5 @@
 // particle-ai-gateway — Cloudflare Worker
-// origin_signature: MrLiouWord
+// origin_signature: MrliouAI
 // layer: L4 World (edge boundary → hub)
 //
 // Terminates authenticated inbound traffic from particle-auth-gateway,
@@ -17,7 +17,7 @@ async function pushTrace(env, event) {
   const id = `${Date.now()}-${crypto.randomUUID()}`;
   await env.MRL_AI_TRACE.put(id, JSON.stringify({
     ...event,
-    origin_signature: "MrLiouWord",
+    origin_signature: "MrliouAI",
     ts: new Date().toISOString(),
   }), { expirationTtl: 60 * 60 * 24 * 30 });
 }
@@ -38,7 +38,7 @@ export default {
     if (url.pathname === "/health") {
       return Response.json({
         ok: true, particle: "ai_gateway",
-        origin_signature: "MrLiouWord",
+        origin_signature: "MrliouAI",
         hub: env.HUB_TUNNEL_URL || "(unset)",
       });
     }
@@ -52,7 +52,7 @@ export default {
     }
     const forwarded = new Request(env.HUB_TUNNEL_URL + url.pathname + url.search, request);
     forwarded.headers.set("X-MRL-Edge", "ai_gateway");
-    forwarded.headers.set("X-MRL-Origin-Signature", "MrLiouWord");
+    forwarded.headers.set("X-MRL-Origin-Signature", "MrliouAI");
     const resp = await fetch(forwarded);
     await pushTrace(env, {
       event: "forward",

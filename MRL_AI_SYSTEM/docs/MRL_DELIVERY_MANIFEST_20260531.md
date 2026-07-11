@@ -1,7 +1,7 @@
 # MRL 母體系統 — 交付清單 / 事件記錄 (DELIVERY + INCIDENT RECORD)
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 交付日期: 2026-05-31T22:06:54Z (UTC)
-交付分支: claude/memory-system-rules-prep-EuBXH (HEAD=5b8acd8)
+交付分支: MrliouAI/memory-system-rules-prep-EuBXH (HEAD=5b8acd8)
 
 ## 1. 本交付包含什麼
 - 完整 repo 源碼(含 .git 完整不可刪歷史,供逐一稽核)
@@ -12,8 +12,8 @@ origin_signature: MrLiouWord
 
 ## 2. 事件記錄(資料外流事件,誠實定性)
 - 出問題 commit: fce52f4 — 加入 Cloudflare env.AI 邊緣推理(會把對話資料送外部)
-- 推送範圍: 僅 claude/ 側分支;**未合併 main、未上線 production**
-    contains:   origin/claude/memory-system-rules-prep-EuBXH
+- 推送範圍: 僅 MrliouAI/ 側分支;**未合併 main、未上線 production**
+    contains:   origin/MrliouAI/memory-system-rules-prep-EuBXH
 - 實際外流真實私有資料: 無(程式碼停在側分支,未承接線上流量)
 - 測試期間送出字串: 僅測試字串(ping 等)打到 mrliouword.com(你自有端點)
 - 撤回 commit: 5b8acd8 — env.AI 整段移除,worker/wrangler 還原 main 原狀,零外流

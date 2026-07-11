@@ -1,6 +1,6 @@
 # mrl-sig-verify (CF Worker)
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 `layer: L0 (Origin — signature law)`
 `replaces: particle-sig-verify (currently a 30-line stub, per audit §3.2)`
 

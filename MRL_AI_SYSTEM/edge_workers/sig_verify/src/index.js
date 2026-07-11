@@ -1,5 +1,5 @@
 // particle-sig-verify — Cloudflare Worker (Ed25519)
-// origin_signature: MrLiouWord
+// origin_signature: MrliouAI
 // layer: L0 (Origin — signature law)
 //
 // Feature parity with MRL_AI_SYSTEM/particles/sig_verify/mrl_sig_verify.py
@@ -26,7 +26,7 @@
 //   - `/sign` requires an X-Sign-Auth header matching env.SIGN_SECRET (secret)
 //   - `/verify` is public — anyone can verify (that's what signatures are for)
 
-const ORIGIN_SIGNATURE = "MrLiouWord";
+const ORIGIN_SIGNATURE = "MrliouAI";
 const KV_KEY = "mrl_ed25519_v1"; // stable KV key name
 const TE = new TextEncoder();
 

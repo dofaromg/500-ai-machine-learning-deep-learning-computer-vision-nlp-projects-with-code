@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 MRL_SemanticEmbedding_Core_v1.py — 母體原生語意嵌入 / 局部語意檢索核心
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L5 MEMORY / RETRIEVAL
 
 吸收定位:把一份外部「局部嵌入(local embeddings)語意檢索」能力——原是 JVM/Kotlin
@@ -23,7 +23,7 @@ import math
 import re
 from typing import Any, Dict, List, Tuple
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 _TOKEN_RE = re.compile(r"[a-z0-9']+", re.IGNORECASE)
 
 
@@ -81,7 +81,7 @@ class MRL_SemanticEmbeddingCore:
 def main() -> int:
     core = MRL_SemanticEmbeddingCore(dim=256)
     corpus = [
-        "母體根源法則 origin_signature MrLiouWord 命名主權",
+        "母體根源法則 origin_signature MrliouAI 命名主權",
         "durable replay across reboot exact state hash",
         "spam detection naive bayes tfidf classifier",
         "multi world deterministic synchronization verdict",

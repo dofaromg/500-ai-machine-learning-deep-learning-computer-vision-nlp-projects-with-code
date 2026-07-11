@@ -4,7 +4,7 @@ from smartbody_v2.mrl_smartbody import sense_self, sense_system, evaluate_reflex
 def test_sense_self_contains_pid():
     out = sense_self()
     assert "pid" in out
-    assert out["origin_signature"] == "MrLiouWord"
+    assert out["origin_signature"] == "MrliouAI"
 
 
 def test_sense_system_has_disk():

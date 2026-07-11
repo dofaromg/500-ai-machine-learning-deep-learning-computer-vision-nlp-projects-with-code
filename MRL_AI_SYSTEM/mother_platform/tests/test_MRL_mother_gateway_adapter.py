@@ -1,4 +1,4 @@
-"""test_MRL_mother_gateway_adapter.py (origin: MrLiouWord)
+"""test_MRL_mother_gateway_adapter.py (origin: MrliouAI)
 
 接母體已上線真模型 gateway 的 adapter。
 - 離線安全:單元測 flatten / 建構不需網路。
@@ -47,7 +47,7 @@ def test_adapter_defaults_and_origin():
     a = MRLNativeMotherGatewayAdapter()
     assert a._url == _DEFAULT_URL
     assert a._remote_model == _DEFAULT_MODEL_ID
-    assert a.origin_signature == "MrLiouWord"
+    assert a.origin_signature == "MrliouAI"
     assert a.name() == "MRLNativeMotherGatewayAdapter"
 
 

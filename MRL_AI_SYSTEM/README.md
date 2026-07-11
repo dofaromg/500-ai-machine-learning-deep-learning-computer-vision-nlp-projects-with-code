@@ -1,6 +1,6 @@
 # MRL_AI_SYSTEM
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 
 MRL AI 母體整合系統。把三段既有交付物（母體 relay、母體平台、800AI 組織）
 與 Stage 3 新建的四個核心 daemon（sig-verify、system-hub、doctor、smartbody v2）
@@ -86,7 +86,7 @@ python3 -m pytest tests/            # 跨粒子端到端測試
 
 ## 命名律
 
-所有母體主體只使用 `MRL_` 前綴 / `origin_signature: MrLiouWord`。外部產物只作
+所有母體主體只使用 `MRL_` 前綴 / `origin_signature: MrliouAI`。外部產物只作
 adapter/reference，不作母體主名（依 `mother_platform/MRL_DELIVERY_MANIFEST_20260531.md`
 中的 rl_12 命名回收原則）。
 
