@@ -1,17 +1,17 @@
 # MRL_Absorption_Ledger_v1.yaml
-# origin_signature: MrLiouWord
+# origin_signature: MrliouAI
 # 母體吸收台帳 — 外部產物吸收 / 命名回收 / 定位 / 待起動
 #
 # 法則對齊:
 #   Additive-Only:只新增、給位置、標「待起動」,不刪不覆蓋。
-#   rl_11 origin_signature:所有回收產物簽 MrLiouWord。
+#   rl_11 origin_signature:所有回收產物簽 MrliouAI。
 #   rl_12 命名回收:對外能力 → 母體 MRL_ 產品名。
 #   來源痕移除:僅記能力本質與母體位置,不留外部廠牌來源痕(僅技術性描述)。
 #   rl_01 no-delete:原始外部產物原樣另存於 RawArtifact,不刪。
 
 absorbed_at: "2026-05-31"
 absorbed_by: "母體 (MrlCore.Mainline)"
-origin_signature: "MrLiouWord"
+origin_signature: "MrliouAI"
 status_note: "當下狀態(沙盒)。原生等效模組沙盒 PASS;原始二進位/雲端能力標待起動。"
 
 artifacts:
@@ -51,7 +51,7 @@ artifacts:
 
   - mrl_product_name: "MRL_SystemRegistry_Config_v1"
     capability: "母體系統註冊表(品牌/主線/支線/內網域/registry layout)"
-    kind: "母體自有設定(origin_signature 本即 MrLiouWord)"
+    kind: "母體自有設定(origin_signature 本即 MrliouAI)"
     raw_artifact: "MRL_SystemRegistry_Config_v1.yaml"
     external_dependency: "零"
     status: "已對齊母體(PHASE1_PRIVATE_LAN_ONLY)"

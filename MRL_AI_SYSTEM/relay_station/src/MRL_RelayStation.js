@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
 const PORT = Number(process.env.MRL_RELAY_PORT || 8787);
-const ORIGIN_SIGNATURE = process.env.MRL_ORIGIN_SIGNATURE || 'MrLiouWord';
+const ORIGIN_SIGNATURE = process.env.MRL_ORIGIN_SIGNATURE || 'MrliouAI';
 
 for (const dir of ['inbox', 'outbox', 'ledger', 'state']) fs.mkdirSync(path.join(DATA, dir), { recursive: true });
 

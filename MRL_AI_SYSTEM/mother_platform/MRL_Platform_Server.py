@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # MRL_Platform_Server — 母體對外平台 零依賴 Python 標準庫伺服器
-# origin_signature: MrLiouWord
+# origin_signature: MrliouAI
 #
 # 四大功能：母體控制台 / 即時監控儀表 / API 入口+文件 / 人格對話介面。
 # 真實呼叫母體 crown（MotherAssembly：boot/status/run_dl580/chat）。
@@ -18,7 +18,7 @@ import sys
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 PLATFORM_DOMAIN = os.environ.get("MRL_PLATFORM_DOMAIN", "mrliouword.com")
 # 零外部依賴法則:平台**不**預設指向任何外部模型供應商。真模型一律走母體自運行
 # DL580(OLLAMA / OpenAI 相容自架端點)。設了 MRL_MOTHER_GATEWAY_URL(指向你 DL580
@@ -167,7 +167,7 @@ input,textarea{width:100%;background:#0a0c0e;color:#e8eef2;border:1px solid #1d2
 table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 8px;border-bottom:1px solid #161b20;vertical-align:top}
 .m{color:#e3b341;font-weight:600}.b{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;background:#13361a;color:#7ee787}</style></head>
 <body><header><h1>🌌 MRL 母體運轉平台 <span class=b>""" + PLATFORM_DOMAIN + """</span></h1>
-<div class=sig>origin_signature=MrLiouWord ｜ 權位區分模式 ｜ 入口 MRL_Platform_Server（零依賴）</div></header>
+<div class=sig>origin_signature=MrliouAI ｜ 權位區分模式 ｜ 入口 MRL_Platform_Server（零依賴）</div></header>
 <nav>
 <button class="nv on" data-t=console>母體控制台</button>
 <button class=nv data-t=monitor>即時監控</button>
@@ -183,7 +183,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 8px;bord
 <button class=act onclick=mon()>刷新監控</button><pre id=monOut>載入中…</pre></div></section>
 <section class=tab id=api><div class=card><h2>API 入口 / 文件</h2>
 <table><tr><td><b>方法</b></td><td><b>路徑</b></td><td><b>說明</b></td></tr>""" + rows + """</table>
-<p style=color:#9fb0a8;font-size:12px>所有回應帶 origin_signature=MrLiouWord。對外經 Cloudflare Tunnel；金鑰/授權為接線層。</p></div></section>
+<p style=color:#9fb0a8;font-size:12px>所有回應帶 origin_signature=MrliouAI。對外經 Cloudflare Tunnel；金鑰/授權為接線層。</p></div></section>
 <section class=tab id=chat><div class=card><h2>人格對話介面</h2>
 <textarea id=msg rows=3 placeholder=對母體說點什麼…></textarea>
 <button class=act onclick=chat()>送出</button><pre id=chatOut></pre></div></section>

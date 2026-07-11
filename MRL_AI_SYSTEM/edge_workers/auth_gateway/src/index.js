@@ -1,5 +1,5 @@
 // particle-auth-gateway — Cloudflare Worker
-// origin_signature: MrLiouWord
+// origin_signature: MrliouAI
 // layer: L0/L4 boundary (external → internal)
 //
 // Verifies JWT bearer token + optional L0 Ed25519 signature header, then
@@ -39,7 +39,7 @@ async function audit(env, event) {
   const key = `${Date.now()}-${crypto.randomUUID()}`;
   await env.MRL_AUTH_AUDIT.put(key, JSON.stringify({
     ...event,
-    origin_signature: "MrLiouWord",
+    origin_signature: "MrliouAI",
     ts: new Date().toISOString(),
   }));
 }
@@ -50,7 +50,7 @@ export default {
     if (url.pathname === "/health") {
       return Response.json({
         ok: true, particle: "auth_gateway",
-        origin_signature: "MrLiouWord",
+        origin_signature: "MrliouAI",
         backend: env.BACKEND_URL || "(unset)",
       });
     }
@@ -70,7 +70,7 @@ export default {
     }
     const forwarded = new Request(env.BACKEND_URL + url.pathname + url.search, request);
     forwarded.headers.set("X-MRL-Subject", jwt.claims.sub || "anonymous");
-    forwarded.headers.set("X-MRL-Origin-Signature", "MrLiouWord");
+    forwarded.headers.set("X-MRL-Origin-Signature", "MrliouAI");
     await audit(env, { event: "forward", path: url.pathname, sub: jwt.claims.sub });
     return fetch(forwarded);
   },

@@ -1,6 +1,6 @@
 """particle-sig-verify — L0 signature law daemon.
 
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L0 (Origin — signature law)
 
 Ed25519-backed sign / verify daemon. Zero external deps: uses stdlib
@@ -26,7 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from trace_chain import emit as trace_emit  # noqa: E402
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 HOST = os.environ.get("MRL_SIG_HOST", "127.0.0.1")
 PORT = int(os.environ.get("MRL_SIG_PORT", "8801"))
 KEYDIR = Path(os.environ.get("MRL_SIG_KEYDIR", "/etc/mrl/keys"))

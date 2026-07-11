@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 MRL_MotherGateway_Adapter_v1.py — 母體 gateway 真模型 adapter(接已上線真模型)
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L6 LLM / GATEWAY
 
 事實校正:真模型**早已上線**在母體自有公網 gateway(mrliouword.com/api/chat,
@@ -34,7 +34,7 @@ if _HERE not in sys.path:
 
 from llm_adapter import LLMAdapter, LLMRequest, LLMResponse  # noqa: E402
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 # 零外部依賴:不 baked 任何外部供應商預設端點。端點一律由 env 指向你 DL580
 # 自運行對外網址(OLLAMA / 自架 gateway)。未設則不連,deny-by-default。
 _DEFAULT_URL = os.environ.get("MRL_MOTHER_GATEWAY_URL", "")
@@ -85,7 +85,7 @@ class MRLNativeMotherGatewayAdapter(LLMAdapter):
                 headers={"Content-Type": "application/json",
                          # 母體 gateway 經 Cloudflare;預設 Python-urllib UA 會被 WAF 擋(403),
                          # 帶常規 UA 放行(與 curl 同)。
-                         "User-Agent": "MRL-Mother/1.0 (origin_signature=MrLiouWord)",
+                         "User-Agent": "MRL-Mother/1.0 (origin_signature=MrliouAI)",
                          "Accept": "application/json"})
             with urllib.request.urlopen(req, timeout=self._timeout) as r:
                 resp = json.loads(r.read().decode("utf-8"))

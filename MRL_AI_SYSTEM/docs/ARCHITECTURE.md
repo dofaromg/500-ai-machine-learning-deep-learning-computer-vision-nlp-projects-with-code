@@ -1,6 +1,6 @@
 # MRL_AI_SYSTEM — Architecture
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 
 ## 三層對齊（前端雲空間層 / 中端操作層 / 後端母體層）
 

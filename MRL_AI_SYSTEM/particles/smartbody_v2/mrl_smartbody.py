@@ -1,6 +1,6 @@
 """particle-smartbody-v2 — the body daemon (sense / act / reflex).
 
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L4 World / L7 Execution
 
 Upgrades v1 (which was a systemd-service shell) with real endpoints:
@@ -40,7 +40,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from trace_chain import emit as trace_emit  # noqa: E402
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 HOST = os.environ.get("MRL_BODY_HOST", "127.0.0.1")
 PORT = int(os.environ.get("MRL_BODY_PORT", "8787"))
 HUB_URL = os.environ.get("MRL_BODY_HUB", "http://127.0.0.1:9000")

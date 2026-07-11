@@ -4,7 +4,7 @@ system_mainline: "MrlCore.Mainline"
 system_branch_daughter: "MrlCore.Daughter"
 release_tag: "v1.0.0"
 status: "stable_locked"
-origin_signature: "MrLiouWord"
+origin_signature: "MrliouAI"
 created_at: "2026-02-24"
 
 network_phase: "PHASE1_PRIVATE_LAN_ONLY"

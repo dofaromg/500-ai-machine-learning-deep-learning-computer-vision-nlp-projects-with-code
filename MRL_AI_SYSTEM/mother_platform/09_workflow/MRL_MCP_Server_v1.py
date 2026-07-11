@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 MRL_MCP_Server_v1.py — 母體對外 MCP 閘口（rl_13 出口即入口 / rl_19 MCP 基座)
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L0 ROOT (出入口) + L4 WORLD
 
 把母體能力(MotherAssembly)暴露為 Model Context Protocol 工具,讓任何 MCP 客戶端
@@ -25,7 +25,7 @@ import json
 import sys
 from typing import Any, Dict, List, Optional
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 PROTOCOL_VERSION = "2024-11-05"
 SERVER_NAME = "MRL_Mother_MCP"
 SERVER_VERSION = "1.0.0"

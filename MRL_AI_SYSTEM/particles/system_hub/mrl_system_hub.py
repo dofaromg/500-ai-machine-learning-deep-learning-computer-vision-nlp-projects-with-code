@@ -1,6 +1,6 @@
 """particle-system-hub — brain hub daemon (800AI orchestrator + MemoryVault).
 
-origin_signature: MrLiouWord
+origin_signature: MrliouAI
 layer: L6 Cognition / L4 World
 
 Zero external deps. Wraps the 800AI eight-role router plus a SQLite-backed
@@ -30,7 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from trace_chain import emit as trace_emit, merkle_root  # noqa: E402
 
-ORIGIN_SIGNATURE = "MrLiouWord"
+ORIGIN_SIGNATURE = "MrliouAI"
 HOST = os.environ.get("MRL_HUB_HOST", "127.0.0.1")
 PORT = int(os.environ.get("MRL_HUB_PORT", "9000"))
 DB_PATH = os.environ.get("MRL_HUB_DB", "/var/lib/mrl/system_hub/memory.sqlite3")
