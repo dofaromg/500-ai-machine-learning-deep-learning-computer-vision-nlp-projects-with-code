@@ -2,8 +2,8 @@
 
 `origin_signature: MrLiouWord`
 
-Source-level and deployment-level patches for the three Cloudflare Workers with
-P0 security findings surfaced by [`docs/STAGE3_WORKER_AUDIT_20260710.md`](../../docs/STAGE3_WORKER_AUDIT_20260710.md).
+Source-level and deployment-level patches for the Cloudflare Workers with
+P0 security findings surfaced by [`docs/STAGE3_WORKER_AUDIT_20260710.md`](../../docs/STAGE3_WORKER_AUDIT_20260710.md) and follow-up audit work.
 
 Each patch is a self-contained markdown file with: problem statement, diff, deployment
 steps, and a verification checklist. **Nothing here re-embeds the current deployed
@@ -17,7 +17,8 @@ Apply in increasing complexity so early wins are locked in before the biggest ch
 |---|---|---|---|
 | 1 | [`particle-system-hub-P0.md`](./particle-system-hub-P0.md) | 1-line source + wrangler secret + 6-step rotation | 5 min |
 | 2 | [`particle-ai-gateway-P0.md`](./particle-ai-gateway-P0.md) | ~10 line auth-guard block + wrangler.toml var | 15 min |
-| 3 | [`particle-auth-gateway-P0.md`](./particle-auth-gateway-P0.md) | Cryptographic rewrite with versioned envelope + phased in-place migration | 2-3 hours |
+| 3 | [`shengai-isp-P0.md`](./shengai-isp-P0.md) | 3 secrets + auth backdoor in one file (API key + JWT + password) | 45 min |
+| 4 | [`particle-auth-gateway-P0.md`](./particle-auth-gateway-P0.md) | Cryptographic rewrite with versioned envelope + phased in-place migration | 2-3 hours |
 
 ## Shared principles
 
@@ -29,5 +30,5 @@ Apply in increasing complexity so early wins are locked in before the biggest ch
 ## Not covered here (future patches)
 
 - `particle-doctor` — `CF_ACCOUNT` hardcoded (P2 hygiene, or P0/P1 if `CF_KEY` is Global). Priority depends on the CF_KEY scope; see `STAGE3_WORKER_AUDIT_20260710.md` §3.5.
-- `shengai-isp` — `ANTHROPIC_API_KEY` hardcoded (flagged in CareOS report, not directly audited here).
-- `particle-sig-verify` — currently a stub. Not a P0 (no vulnerable logic to leak), but a P1 replacement: port `MRL_AI_SYSTEM/particles/sig_verify/mrl_sig_verify.py` (Ed25519) to a CF Worker using WebCrypto's `Ed25519` sign/verify.
+- `particle-sig-verify` — currently a stub. Not a P0 (no vulnerable logic to leak), but a P1 replacement: port `MRL_AI_SYSTEM/particles/sig_verify/mrl_sig_verify.py` (Ed25519) to a CF Worker using WebCrypto's `Ed25519` sign/verify. **Superseded**: PR #4 shipped this — see `MRL_AI_SYSTEM/edge_workers/sig_verify/`.
+- `shengai-isp` password hashing upgrade — the P0 patch removes the plaintext backdoor and adds SHA-256 as a minimum bar. A P1 follow-up should introduce PBKDF2 with per-row salt (same pattern as `particle-auth-gateway-P0.md`) and a data migration.
