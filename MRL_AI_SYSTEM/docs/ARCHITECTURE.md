@@ -6,9 +6,9 @@
 
 | 層 | 位置 | 現況 |
 |---|---|---|
-| 前端雲空間層 | Cloudflare Workers (`edge_workers/*`) + 138 個 Particle Workers（外部 repo） | ✅ 138 個既有；本 repo 新增 auth_gateway、ai_gateway |
+| 前端雲空間層 | 邊緣 Workers (`edge_workers/*`) + 138 個 Particle Workers（外部 repo） | ✅ 138 個既有；本 repo 新增 auth_gateway、ai_gateway |
 | 中端操作層 | 母體主機的 `particle-*` daemons + `mother_platform` | ✅ Stage 3 新建（sig_verify、system_hub、doctor、smartbody v2、boot） |
-| 後端母體層 | NAS / DL580 / SQLite MemoryVault / systemd | 部分：`system_hub` 內建 SQLite MemoryVault；DL580 gateway 由 `MRL_MotherGateway_Adapter_v1` 對接 |
+| 後端母體層 | NAS / DL580 / 本地儲存層 MemoryVault / 本地服務管理層 | 部分：`system_hub` 內建本地儲存層 MemoryVault；DL580 gateway 由 `MRL_MotherGateway_Adapter_v1` 對接 |
 
 ## 神經（trace_chain）
 
@@ -45,6 +45,6 @@
 ## Stage 3 驗收條件
 
 1. **獨立性**：拔網後 `smartbody_v2` 靠 reflex 規則仍能處理 `ping`、`status` 等本地任務
-2. **神經連通**：CF 邊 → auth_gateway → ai_gateway → system_hub 全程留 trace，chain_hash 可 verify
-3. **自我修復**：kill `system_hub` 進程後，`doctor` 在下一個 15 秒 tick 偵測到 down、`MRL_DOCTOR_SYSTEMD=1` 時自動 `systemctl --user restart mrl-system-hub.service`
+2. **神經連通**：邊緣 → auth_gateway → ai_gateway → system_hub 全程留 trace，chain_hash 可 verify
+3. **自我修復**：kill `system_hub` 進程後，`doctor` 在下一個 15 秒 tick 偵測到 down、環境旗標 `MRL_DOCTOR_SYSTEMD=1` 開啟時自動經本地服務管理層重啟 `mrl-system-hub.service`
 4. **可逆軌跡**：`trace_chain.verify()` 全綠 + `merkle_root()` 可對外公開，任何時間點可重放

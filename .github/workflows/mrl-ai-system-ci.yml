@@ -69,3 +69,6 @@ jobs:
 
       - name: Run MRL_AI_SYSTEM verify_all.sh
         run: bash MRL_AI_SYSTEM/scripts/verify_all.sh
+
+      - name: 命名律檢查 (rl_12)
+        run: bash MRL_AI_SYSTEM/scripts/check_naming_law.sh
