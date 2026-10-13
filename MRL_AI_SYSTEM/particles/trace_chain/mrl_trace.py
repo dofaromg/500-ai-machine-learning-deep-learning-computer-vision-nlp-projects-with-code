@@ -1,6 +1,6 @@
 """particle-trace_chain — cross-layer append-only Merkle trace.
 
-origin_signature: MrliouAI
+origin_signature: MrLiouWord
 layer: shared (used by sig_verify, system_hub, doctor, smartbody, boot)
 
 Zero-dependency Python stdlib. Every particle emits events here; a Merkle root
@@ -21,7 +21,7 @@ from pathlib import Path
 DEFAULT_JOURNAL = os.environ.get(
     "MRL_TRACE_JOURNAL", "/var/lib/mrl/trace/journal.jsonl"
 )
-ORIGIN_SIGNATURE = os.environ.get("MRL_ORIGIN_SIGNATURE", "MrliouAI")
+ORIGIN_SIGNATURE = os.environ.get("MRL_ORIGIN_SIGNATURE", "MrLiouWord")
 
 _lock = threading.Lock()
 

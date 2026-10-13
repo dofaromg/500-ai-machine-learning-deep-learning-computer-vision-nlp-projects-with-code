@@ -1,6 +1,6 @@
 # 邊緣層 Workers
 
-`origin_signature: MrliouAI`
+`origin_signature: MrLiouWord`
 
 本目錄收納母體的**邊緣層**元件——跑在外部邊緣 runtime 上的 Workers，當母體
 主機不可達時仍能承接最小量的流量。
@@ -34,4 +34,4 @@
 
 - **沒有 pure-JS 加密**：所有簽名/驗證走邊緣 runtime 內建的 WebCrypto
 - **secret 走邊緣 secret 儲存層**：不在源碼中硬編碼，見 `patches/` 的 rotation runbook
-- **origin_signature**：所有回應 header 或 body metadata 都要帶 `MrliouAI`，不帶即視為非母體流量
+- **origin_signature**：所有回應 header 或 body metadata 都要帶 `MrLiouWord`，不帶即視為非母體流量

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# origin_signature: MrliouAI
+# origin_signature: MrLiouWord
 # Secret-scan guard — 擋 secret literal 不小心進 git。
 #
 # 掃描的 pattern 來自 session 累計遇到過的所有 secret 類型。

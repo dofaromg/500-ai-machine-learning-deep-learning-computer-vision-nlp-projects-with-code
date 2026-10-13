@@ -1,6 +1,6 @@
 # P0 Patch — `shengai-isp` · Move secrets to env + fix auth backdoor
 
-`origin_signature: MrliouAI`
+`origin_signature: MrLiouWord`
 `target_worker: shengai-isp` (Cloudflare)
 `current_deploy: v3.1` (per source's HTML title)
 `fix_type: config + one-liner auth fix`

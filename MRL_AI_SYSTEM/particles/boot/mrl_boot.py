@@ -1,6 +1,6 @@
 """particle-boot — ordered launcher for the MRL daemons.
 
-origin_signature: MrliouAI
+origin_signature: MrLiouWord
 layer: pre-L0 (bootstrap)
 
 Reads boot.manifest.json, launches each particle in order, waits for its health

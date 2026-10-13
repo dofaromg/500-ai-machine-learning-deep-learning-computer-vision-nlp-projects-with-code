@@ -1,6 +1,6 @@
 # mrl-sig-verify (邊緣 Worker)
 
-`origin_signature: MrliouAI`
+`origin_signature: MrLiouWord`
 `layer: L0 (Origin — signature law)`
 `replaces: particle-sig-verify（30 行 stub，見稽核報告 §3.2）`
 

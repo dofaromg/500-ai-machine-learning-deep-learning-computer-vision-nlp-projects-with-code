@@ -1,5 +1,5 @@
 {
-  "origin_signature": "MrliouAI",
+  "origin_signature": "MrLiouWord",
   "manifest_version": "1.0.0",
   "description": "Ordered launcher manifest for MRL particle daemons.",
   "boot_order": [

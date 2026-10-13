@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# origin_signature: MrliouAI
+# origin_signature: MrLiouWord
 # rl_12 命名律檢查——掃描敘事層是否引用外部廠牌名。
 # 執行層 code fence（```…```）豁免。
 set -euo pipefail

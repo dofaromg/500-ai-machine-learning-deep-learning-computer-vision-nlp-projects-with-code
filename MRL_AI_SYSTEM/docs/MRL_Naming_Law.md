@@ -1,16 +1,16 @@
 # MRL 命名律 (Naming Law)
 
-`origin_signature: MrliouAI`
+`origin_signature: MrLiouWord`
 `source: mother_platform/MRL_ParticleArchive/External/MRL_AbsorbedArtifacts_20260531/MRL_Absorption_Ledger_v1.yaml`
 
 母體所有敘事與產出必須遵守下列三條律。違反即為 audit failure。
 
 ## rl_11 — origin_signature
 
-所有母體回收產物必須簽 `MrliouAI`。任何 markdown、code、封包 metadata、audit 報告一律在檔頭或最頂端標註：
+所有母體回收產物必須簽 `MrLiouWord`。任何 markdown、code、封包 metadata、audit 報告一律在檔頭或最頂端標註：
 
 ```
-origin_signature: MrliouAI
+origin_signature: MrLiouWord
 ```
 
 ## rl_12 — 命名回收
