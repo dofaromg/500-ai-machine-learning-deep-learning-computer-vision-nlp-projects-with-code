@@ -1,6 +1,6 @@
 # P0 Patch — `particle-system-hub` · Move `DL580_KEY` to secret
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 `target_worker: particle-system-hub` (Cloudflare)
 `current_version: v2.2.0` (deployed 2026-04-14)
 `fix_type: config-only (no logic change)`

@@ -5,11 +5,13 @@
 # change — unrelated AI/ML docs PRs in the rest of the monorepo are not gated.
 #
 # Runs `scripts/verify_all.sh`, which is the same command developers run
-# locally per MRL_AI_SYSTEM/README.md. It exercises:
+# locally per MRL_AI_SYSTEM/README.md. It exercises six sections:
 #   1. Node RelayStation acceptance test  (Node)
 #   2. trace_chain hash-chain probe        (Python stdlib)
 #   3. sig_verify Ed25519 roundtrip        (Python stdlib)
-#   4. Full pytest suite                    (13 tests, Python + pytest)
+#   4. Full pytest suite                    (Python + pytest; tests/ + mother_platform/tests/)
+#   5. 命名律檢查 rl_12                      (grep)
+#   6. Secret scan                          (grep)
 
 name: MRL_AI_SYSTEM CI
 
@@ -69,6 +71,5 @@ jobs:
 
       - name: Run MRL_AI_SYSTEM verify_all.sh
         run: bash MRL_AI_SYSTEM/scripts/verify_all.sh
-
-      - name: 命名律檢查 (rl_12)
-        run: bash MRL_AI_SYSTEM/scripts/check_naming_law.sh
+        # verify_all.sh 內部已跑 6 個 section（含命名律 + secret scan）,
+        # CI 層不再重複 call 這兩個 script。

@@ -1,6 +1,6 @@
 # 邊緣 Worker P0 修補（Patches）
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 
 母體邊緣層 Worker 的 P0 安全發現修補 runbook 集。發現來源：
 [`docs/STAGE3_WORKER_AUDIT_20260710.md`](../../docs/STAGE3_WORKER_AUDIT_20260710.md) 及後續稽核。

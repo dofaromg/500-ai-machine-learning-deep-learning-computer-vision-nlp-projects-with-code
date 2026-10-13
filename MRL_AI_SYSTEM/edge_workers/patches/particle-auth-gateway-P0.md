@@ -1,6 +1,6 @@
 # P0 Patch — `particle-auth-gateway` · XOR → PBKDF2 + AES-GCM
 
-`origin_signature: MrLiouWord`
+`origin_signature: MrliouAI`
 `target_worker: particle-auth-gateway` (Cloudflare)
 `current_version: v1.1.0` (deployed 2026-03-14)
 `fix_type: cryptographic upgrade with in-place migration`
