@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-# origin_signature: MrliouAI
+# origin_signature: MrLiouWord
 # Verify the local MRL_AI_SYSTEM install without touching production state.
 set -euo pipefail
+
+python3 "$(dirname "${BASH_SOURCE[0]}")/check_mrl_origin.py"
+python3 "$(dirname "${BASH_SOURCE[0]}")/../tests/test_mrl_naming_restoration.py"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$HERE"

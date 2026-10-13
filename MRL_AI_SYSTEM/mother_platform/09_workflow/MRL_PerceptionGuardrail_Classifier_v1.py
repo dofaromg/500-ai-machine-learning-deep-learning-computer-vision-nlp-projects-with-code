@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 MRL_PerceptionGuardrail_Classifier_v1.py — 母體感知守門統計分類器
-origin_signature: MrliouAI
+origin_signature: MrLiouWord
 layer: L4 PERCEPTION / GUARDRAIL
 
 吸收定位:把一份外部「垃圾訊息 / 毒性訊息偵測」ML 能力(TF-IDF + Multinomial
@@ -11,7 +11,7 @@ Naive Bayes / Logistic Regression 思路)回收為母體**原生**能力模組,�
 誠實標註,沿用先前約定(檢索/統計排序,非生成)。
 
 對齊:
-  rl_11 origin_signature 主權(產物簽 MrliouAI)
+  rl_11 origin_signature 主權(產物簽 MrLiouWord)
   rl_12 命名回收(對外能力名 → 母體 MRL_ 名)
   rl_00 deny-by-default(分數過閾值即 flag,不靜默放行)
 
@@ -29,7 +29,7 @@ import math
 import re
 from typing import Any, Dict, List, Tuple
 
-ORIGIN_SIGNATURE = "MrliouAI"
+ORIGIN_SIGNATURE = "MrLiouWord"
 
 # 純 stdlib 英文停用詞(對齊外部 stop_words='english' 之意圖,母體自有清單)
 _STOPWORDS = {

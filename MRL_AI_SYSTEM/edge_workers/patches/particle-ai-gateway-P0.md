@@ -1,6 +1,6 @@
 # P0 Patch — `particle-ai-gateway` · `AUTH_BYPASS` fail-closed
 
-`origin_signature: MrliouAI`
+`origin_signature: MrLiouWord`
 `target_worker: particle-ai-gateway` (Cloudflare)
 `current_deploy: 2026-05-15`
 `fix_type: authentication hardening`

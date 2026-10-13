@@ -4,7 +4,7 @@ import { MRL_process } from '../src/MRL_Core.js';
 const payload = {
   name: 'MRL_acceptance_sample',
   law: 'receive -> particleize -> rebuild -> relay -> ledger',
-  origin_signature: 'MrliouAI'
+  origin_signature: 'MrLiouWord'
 };
 const result = MRL_process(payload, 'acceptance_test', 'MRL_Mother_Runtime');
 const checks = [
